@@ -15,6 +15,7 @@ class WeixinAuthenticate
      */
     protected $baseOAUTH = 'https://open.weixin.qq.com/connect/oauth2/authorize';
 
+    // protected $baseOAUTH = 'http://hongyan.cqupt.edu.cn/GetWeixinCode/get-weixin-code.html';
     /**
      * 获取AccessToken的基础URL
      * @var string
@@ -36,14 +37,16 @@ class WeixinAuthenticate
     /**
      * @var string
      */
-    protected $state = '';
+    protected $state = 'fuckweixin';
 
     /**
      * 跳转域名
      * @var string
      */
-    protected $domain = 'http://hongyan.cqupt.edu.cn';
+   // protected $domain = 'http://hongyan.cqupt.edu.cn';
+    protected $domain = ' http://ebc15c7c.ngrok.io';
 
+    // protected $domain = 'localhost';
     /**
      * Handle an incoming request.
      *
@@ -54,6 +57,8 @@ class WeixinAuthenticate
      */
     public function handle($request, Closure $next)
     {
+        // header("Access-Control-Allow-Origin", "*");
+        header("Access-Control-Allow-Origin: *");
         $config = $this->load();
 
         if (!$request->session()->has('weixin.user')) {
@@ -61,9 +66,15 @@ class WeixinAuthenticate
             if ($request->has('state') && $request->has('code')) {
                 $code = $request->get('code');
 
+                $request->session()->set('weixin.state', $this->state);
+
+                // echo "weixinstate".$request->session()->get('weixin.state');
+                // echo "get".$request->get('state');
+                // exit;
+
                 // 验证state参数是否改变
                 abort_if($request->get('state') != $request->session()->get('weixin.state'), 500);
-
+                   
                 // 发起POST请求获取accessToken
                 $data = $this->send(
                     $this->baseACCESS, 
@@ -88,7 +99,7 @@ class WeixinAuthenticate
             }
 
             // 生成随机的state字符串
-            $this->state = sha1(uniqid(mt_rand(1, 1000000), true));
+            // $this->state = sha1(uniqid(mt_rand(1, 1000000), true));
 
             $oauth2 = $this->baseOAUTH . '?' . $this->build_query([
                 'appid' => $config['appid'],
@@ -133,7 +144,7 @@ class WeixinAuthenticate
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, '');
         }
-        // 设置URL 
+        // 设置URL
         curl_setopt($ch, CURLOPT_URL, $url . '?' . $this->build_query($data));
 
         $res = curl_exec($ch);

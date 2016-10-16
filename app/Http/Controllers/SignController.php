@@ -16,15 +16,21 @@ class SignController extends Controller
      *  @return 返回1表示用户没有绑定小帮手 返回2表示用户不在签到时间内签到 返回3表示用户今天已经签到过了 返回0才表示用户签到成功
      *
      */ 
+   
     public function sign(Request $request) {
 
-        // $openid  = $this->getOpenid();
-        if (empty(($user = $request->session()->get('weixin.user'))))
-                return response()->json(['status' => '输入参数有误， 请重试。']);
 
-        $wx = $request->session()->get('weixin.user');
-        $openid = $wx['openid'];
-
+        if($request->session()->has('myData')) {
+            $myData = $request->session()->get('myData');
+            // var_dump($myData);
+            $openid = $myData->data->openid;
+            $username = $myData->data->nickname;
+        
+        } else {
+            $myData = $this->getData($request);
+            $openid = $myData->data->openid;
+            $username = $myData->data->nickname;
+        }   
         $userData = $this->getUserData($openid);
 
         if ($this->hasBind($openid)) {
@@ -32,10 +38,10 @@ class SignController extends Controller
             return json_encode($data);
         }//用户没有绑定小帮手 返回1
 
-        if(!$this->hasJoined($userData)) {
-            $this->joinIn();
-            $userData->openid = $wx['openid'];   
-            $userData->username = $wx['nickname'];        
+        if(!$this->hasJoined($userData,$openid,$username)) {
+            $this->joinIn($openid,$username);
+            $userData['openid'] = $openid;   
+            $userData['username'] = $username;        
         }       
 
         $userData = $userData[0];
@@ -43,18 +49,24 @@ class SignController extends Controller
 
     	if ($this->outTime()) {
     		$data['num'] = 2;
-            return json_encode($data);
+            return response()->json($data);
+
     	}//不在签到时间内签到 返回2
  
     	if ($this->hasSigned($userData)) {
     	    $data['num'] = 3;
+
             return json_encode($data);
+
     	}//用户今天已经签到过了 返回3；
     	
     	if($this->addToDb($userData)) {
             $data['num'] = 0;
             $data['rank'] = $this->getRank();
+    
             return json_encode($data);
+
+
     	} else {
             $data['num'] = 4;
             return json_encode($data);
@@ -101,11 +113,10 @@ class SignController extends Controller
     	}
     } //判断用户有没有参加签到活动  参加返回1 
 
-    private function joinIn(Request $request) {
+    private function joinIn($openid,$username) {
 
-        $wx = $request->session()->get('weixin.user');
-    	$insertData['openid'] = $wx['openid'];
-        $insertData['username'] = $wx['nickname'];
+    	$insertData['openid'] = $openid;
+        $insertData['username'] = $username;
 
         DB::table('time')->insert($insertData);
         
@@ -113,8 +124,8 @@ class SignController extends Controller
 	private function outTime() {
 		
 	    $time = $this->getTime(); 
- 		$startTime = "07:15:00";				//活动开始时间
- 		$endTime = "07:45:00";					//活动结束时间
+ 		$startTime = "07:05:00";				//活动开始时间
+ 		$endTime = "07:15:00";					//活动结束时间
  		if ($time > $startTime && $time < $endTime) {
  			return 0;							//在活动时间范围内返回0
  		} else {	
@@ -152,7 +163,6 @@ class SignController extends Controller
     private function getUserData($openid) {
    	
     	$data['openid'] = $openid;
-    
 		$userData = DB::table("time")->where($data)->get();
     	return $userData;
 
@@ -170,5 +180,40 @@ class SignController extends Controller
         $data['lastSign'] = $this->getTime("m-d");
         $rank = DB::table("time")->where($data)->count();
         return $rank;
+    }
+
+    private function getData(Request $request)
+    {
+        $redirect_uri = urlencode("http://localhost/qiandao/server.php/sign");
+        if (!isset($_GET['code'])) {
+
+            redirect("http://hongyan.cqupt.edu.cn/GetWeixinCode/get-weixin-code.html?appid=wx81a4a4b77ec98ff4&redirect_uri=".$redirect_uri."&response_type=code&scope=snsapi_userinfo&state=fuckweixin#wechat_redirect");
+
+        } else {
+
+            $code = $_GET['code'];
+            $time = time();
+            $str = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $string = '';
+            for($i = 0; $i < 16; $i ++) {
+                $num = mt_rand(0,61);
+                $string .= $str[$num];
+            }
+            $secret = sha1(sha1($time).md5($string)."redrock");
+            $t2 = array(
+                'timestamp'=>$time,
+                'string'=>$string,
+                'secret'=>$secret,
+                "token" => "gh_68f0a1ffc303",
+                'code'=>$code,
+            );
+            $url = "http://hongyan.cqupt.edu.cn/MagicLoop/index.php?s=/addon/Api/Api/webOauth";
+            $data = json_decode(curl_post($url,$t2));
+            // $openid = $data['openid'];
+            
+            $request->session()->set('myData', $data);
+       
+            return $data;
+        }
     }
  }

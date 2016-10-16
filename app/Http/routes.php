@@ -17,12 +17,13 @@
 	
 	// Route::get('/test','SignController@test');
 
-
-Route::group(['middleware' => \App\Http\Middleware\WeixinAuthenticate::class],function() {
 	Route::get('/', function () {
 	    return view('qiandao');
 	});
-	Route::get('/showList','ListController@showList');
-	Route::get('/sign', 'SignController@sign');
+	Route::get('showList','ListController@showList');
+	Route::get('sign', 'SignController@sign');
+Route::group(['middleware' => \App\Http\Middleware\WeixinAuthenticate::class],function() {
+
+	
 	
 });
