@@ -1,0 +1,48 @@
+/* 
+* @Author: anchen
+* @Date:   2016-10-08 14:59:40
+* @Last Modified by:   anchen
+* @Last Modified time: 2016-10-08 21:39:17
+*/
+#list {
+    width: 4rem;
+    height: 1rem;
+    border-radius: 10px;
+    background: #fffccc;
+    color: #cccfff;
+    font-size: 0.5rem;
+    line-height: 1rem;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 1rem;
+}
+#listDet {
+    width: 3rem;
+    height: 0;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.4rem;
+    background: #fcffcc;
+    color:#cfcffc;
+    display: none;
+    margin: 0 auto;
+    margin-top: 1rem;
+}
+.useL {
+    height: 0.5rem;
+    width: 3rem;
+}
+#sign {
+    width: 4rem;
+    height: 1rem;
+    border-radius: 10px;
+    background: #fffccc;
+    color: #cccfff;
+    font-size: 0.5rem;
+    line-height: 1rem;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 3rem;
+}
