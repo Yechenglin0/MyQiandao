@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="public/css/qiandao.css">
+        <link rel="stylesheet" type="text/css" href="{{URL::asset('css/qiandao.css') }}">
         <script type="text/javascript">
         window.onload=function(){function a(){var b=navigator.userAgent.toLowerCase();return(/micromessenger/.test(b))?true:false}if(!a()){document.write("请在微信浏览器打开 : )")}};
         </script>
@@ -11,33 +11,33 @@
         </script>
     </head>
     <body>
-        <img src="public/img/bg.png" alt="bg" class="bg">
-        <img src="public/img/light.png" alt="" class="bg" id="light">
+        <img src="{{URL::asset('img/bg.png') }}" alt="bg" class="bg">
+        <img src="{{URL::asset('img/light.png') }}" alt="" class="bg" id="light">
         <div id="readRead">
-            <img src="public/img/fuli.png" alt="fuli" id="fuli">
-            <img src="public/img/logo.png" alt="read">
+            <img src="{{URL::asset('img/fuli.png') }}" alt="fuli" id="fuli">
+            <img src="{{URL::asset('img/logo.png') }}" alt="read">
         </div>
         <div id="alertB">
             <div id="meng"> </div>
             <div id="aBox">
-                <img src="public/img/signbg.png" alt="" id="signbg">
-                <img src="public/img/signfa.png" alt="" id="signCk">
-                <img src="public/img/signcl.png" alt="" id="signCL">
+                <img src="{{URL::asset('img/signbg.png')}}" alt="" id="signbg">
+                <img src="{{URL::asset('img/signfa.png')}}" alt="" id="signCk">
+                <img src="{{URL::asset('img/signcl.png')}}" alt="" id="signCL">
                 <div id="yesCnt">
                     <div id="lineO">签到失败
                     </div>
                     <div id="lineT">对不起，签到时间为周一至周五7:00-7:15</div>
                 </div>
                 <div id="yesB">
-                    <img src="public/img/fanhui.png" alt="" id="yes">
+                    <img src="{{URL::asset('img/fanhui.png')}}" alt="" id="yes">
                 </div>
             </div>
         </div>
         <div id="coreCnt">
-            <img src="public/img/detB.png" alt="">
+            <img src="{{URL::asset('img/detB.png')}}" alt="">
             <div id="coreCore">
-                <img src="public/img/Isign.png" alt="" id="Isign">
-                <img src="public/img/banL.png" alt="" id="banL">
+                <img src="{{URL::asset('img/Isign.png')}}" alt="" id="Isign">
+                <img src="{{URL::asset('img/banL.png')}}" alt="" id="banL">
             </div>
             <div id="youKnow">
                 <div class="OL">
@@ -59,10 +59,10 @@
             </div>
         </div>
         <div id="redrock"><span> &copy; </span>红岩网校工作站</div>
-        <img src="public/img/botttom.png" alt="" id="btm">
+        <img src="{{URL::asset('img/botttom.png')}}" alt="" id="btm">
     </body>
-    <script type="text/javascript" src="public/js/ajax.js"></script>
-    <script type="text/javascript" src="public/js/qiandao.js"></script>
+    <script type="text/javascript" src="{{URL::asset('js/ajax.js')}}"></script>
+    <script type="text/javascript" src="{{URL::asset('js/qiandao.js')}}"></script>
     <script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script>
         var TITLE = '重邮早读趴';
