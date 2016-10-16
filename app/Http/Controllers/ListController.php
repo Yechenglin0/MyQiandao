@@ -21,8 +21,11 @@ class ListController extends Controller
         
         } else {
             $myData = $this->getData($request);
-            $openid = $myData->data->openid;
-            $username = $myData->data->nickname;
+
+            var_dump($myData);
+            exit;
+            // $openid = $myData->data->openid;
+            // $username = $myData->data->nickname;
         }   
 
     	$myRank = $this->getMyrank($list,$openid);
@@ -48,7 +51,9 @@ class ListController extends Controller
 	
     private function getData(Request $request)
     {
+        // $redirect_uri = urlencode("http://localhost/qiandao/server.php/sign");
         $redirect_uri = urlencode("http://hongyan.cqupt.edu.cn/qiandao/server.php/sign");
+
         if (!isset($_GET['code'])) {
 
             redirect("http://hongyan.cqupt.edu.cn/GetWeixinCode/get-weixin-code.html?appid=wx81a4a4b77ec98ff4&redirect_uri=".$redirect_uri."&response_type=code&scope=snsapi_userinfo&state=fuckweixin#wechat_redirect");
